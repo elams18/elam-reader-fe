@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
     "pinia": "^2.1.7",
+    "uuid": "^9.0.1",
     "vue": "^3.4.15"
   },
   "devDependencies": {

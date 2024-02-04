@@ -1,39 +1,44 @@
-<script>
+<script setup>
 // Inside a component
-import {booksStore} from "@/stores/books";
-import {onMounted, ref} from "vue";
+import { booksStore } from "@/stores/books";
+import { onMounted, ref } from "vue";
 
+onMounted(async () => {
+  user.value = getUser();
+  books.value = await store.getBooks();
+  console.log(books.value);
+});
 
-export default {
-  setup() {
-    const store = booksStore(); // This will automatically pick up the Pinia store
-    const user = ref([])
-    const books = ref([]);
+const store = booksStore();
+const user = ref("");
+const books = ref([]);
 
-    onMounted(async ()=>{
-      user.value = await store.initializeStore();
-      books.value = await store.getBooks();
-    })
+function getUser() {
+  return store.user["readerName"];
+}
 
-    return {
-      // any values you want to expose
-      user,
-      books
-    };
-  },
-  methods: {
-    getUserBooks: (store)=> store.store,
-  },
-};
+function addFavorite(bookId) {
+  const book = store.getBook(bookId);
+  return book;
+}
 
+async function confirmDelete(bookId) {
+  const deleteConfirm = window.confirm(
+    "Are you sure you want to delete from library?",
+  );
+  if (deleteConfirm) {
+    await store.deleteBook(bookId);
+    await store.initializeStore();
+    books.value = await store.getBooks();
+  }
+}
 </script>
-
 
 <template>
   <header>
     <h1>Library</h1>
-    <hr>
-    <h2>Hello {{user["readerName"]}}</h2>
+    <hr />
+    <h2>Hello {{ getUser() }}</h2>
   </header>
 
   <main>
@@ -41,7 +46,10 @@ export default {
       <ul v-for="(book, index) in books" :key="index">
         <li>Title: {{ book.title }}</li>
         <li>Author: {{ book.author }}</li>
-        <a target="_blank" href="https://google.com">Read now</a> <!--later will be a vue route-->
+        <button @click="addFavorite(book.bookId)">Add favorite</button>
+        <button @click="confirmDelete(book.bookId)">Delete from Library</button>
+
+        <!--later will be a vue route-->
         <!-- Other book details... -->
       </ul>
     </div>
@@ -75,7 +83,7 @@ header {
     flex-wrap: wrap;
   }
 
-  .wrapper *{
+  .wrapper * {
     flex-direction: row;
   }
 }

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from 'axios';
+import axios from "axios";
 export const booksStore = defineStore("books", {
     state: () => {
         return {
@@ -30,16 +30,20 @@ export const booksStore = defineStore("books", {
                 this.user = reader.data[0];
                 return this.user;
             }
-            console.log("user not found");
+            window.alert("user not found");
         },
-        // async initializeStore(){
-        //       const readerURL = this.url + "/reader?reader_id=" + this.reader_id;
-        //     const reader = await axios.get(readerURL);
-        //     if(reader.status == 200){
-        //       this.user = reader.data[0];
-        //       return this.user;
-        //     }
-        //   console.log("user not found");
-        // },
+        getBook(bookId) {
+            return this.books.filter((book) => book.bookId === bookId);
+        },
+        async deleteBook(bookId) {
+            const deleteURL = this.url + "/books/" + bookId;
+            const deleteStatus = await axios.delete(deleteURL);
+            if (deleteStatus.status == 202) {
+                this.books.filter((book) => book.bookId !== bookId);
+            }
+            else {
+                window.alert("error in deleting book");
+            }
+        },
     },
 });

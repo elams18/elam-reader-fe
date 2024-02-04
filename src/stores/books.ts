@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import axios from 'axios';
-import {Book} from "@/models/book";
+import axios from "axios";
+import { Book } from "@/models/book";
 
 export const booksStore = defineStore("books", {
   state: () => {
@@ -12,9 +12,9 @@ export const booksStore = defineStore("books", {
     };
   },
   actions: {
-     async getBooks() {
+    async getBooks() {
       try {
-        const booksURL = this.url  + "/books";
+        const booksURL = this.url + "/books";
 
         const response = await axios.get(booksURL);
         const books = response.data;
@@ -27,22 +27,25 @@ export const booksStore = defineStore("books", {
       }
     },
     async initializeStore() {
-       const readerURL = this.url + "/reader?reader_id=" + this.reader_id;
-        const reader = await axios.get(readerURL);
-        if(reader.status == 200){
-          this.user = reader.data[0];
-          return this.user;
-        }
-      console.log("user not found");
+      const readerURL = this.url + "/reader?reader_id=" + this.reader_id;
+      const reader = await axios.get(readerURL);
+      if (reader.status == 200) {
+        this.user = reader.data[0];
+        return this.user;
+      }
+      window.alert("user not found");
     },
-    // async initializeStore(){
-    //       const readerURL = this.url + "/reader?reader_id=" + this.reader_id;
-    //     const reader = await axios.get(readerURL);
-    //     if(reader.status == 200){
-    //       this.user = reader.data[0];
-    //       return this.user;
-    //     }
-    //   console.log("user not found");
-    // },
+    getBook(bookId: String) {
+      return this.books.filter((book) => book.bookId === bookId);
+    },
+    async deleteBook(bookId: String) {
+      const deleteURL = this.url + "/books/" + bookId;
+      const deleteStatus = await axios.delete(deleteURL);
+      if (deleteStatus.status == 202) {
+        this.books.filter((book) => book.bookId !== bookId);
+      } else {
+        window.alert("error in deleting book");
+      }
+    },
   },
 });
