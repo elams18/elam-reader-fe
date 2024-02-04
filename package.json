@@ -1,0 +1,24 @@
+{
+  "name": "elam-reader-fe",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.15"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.23.9",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vue/language-server": "^1.8.27",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}
